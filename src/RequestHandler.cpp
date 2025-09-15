@@ -13,8 +13,8 @@ HTTPResponse RequestHandler ::handle(const HTTPRequest &request) {
 </body>
 </html>
   )";
-  if (request.getMethod() == "GET" && request.getPath == "/" &&
-      request.getVersion == "HTTP/1.1") {
+  if (request.getMethod() == "GET" && request.getPath() == "/" &&
+      request.getVersion() == "HTTP/1.1") {
     request.setStatus(request.getVersion, 200, "OK", OK);
     request.setHeader("Content-Type", "text/html");
     return request.response;

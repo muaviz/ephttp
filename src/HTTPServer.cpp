@@ -48,15 +48,12 @@ void HTTPServer ::read() {
     }
     buf[read_bytes] = '\0';
 
+    HTTPRequest request(buf);
+    std::string response = RequestHandler::handle(request);
+
     // Sending bytes from server to peer
-    char imsg[] = "Haha! You said ";
-    char fmsg[] = "Didn't you?\n";
-    if (send(peer_fd, imsg, strlen(imsg), 0) == -1)
-      handle_error("sending initial bytes");
-    if (send(peer_fd, buf, strlen(buf), 0) == -1)
+    if (send(peer_fd, response, strlen(response), 0) == -1)
       handle_error("sending bytes");
-    if (send(peer_fd, fmsg, strlen(fmsg), 0) == -1)
-      handle_error("sending final bytes");
   }
 }
 
