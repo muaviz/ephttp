@@ -11,8 +11,9 @@ private:
   std::string body;
 
 public:
-  void setStatus(const std::string &version, const int status,
-                 const std::string &message, std::string &body);
+  void setStatus(const std::string &ver, const int code,
+                 const std::string &msg);
+  void setBody(const std::string &bdy);
   void setHeader(const std::string &key, const std::string &value);
   std::string response() const;
 };

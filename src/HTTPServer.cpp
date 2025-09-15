@@ -1,4 +1,7 @@
 #include "HTTPServer.h"
+#include "HTTPRequest.h"
+#include "HTTPResponse.h"
+#include "RequestHandler.h"
 
 // C headers for networking
 #include <arpa/inet.h>  // htons, htonl, inet_addr
@@ -49,11 +52,14 @@ void HTTPServer ::read() {
     buf[read_bytes] = '\0';
 
     HTTPRequest request(buf);
-    std::string response = RequestHandler::handle(request);
+    RequestHandler handler;
+    HTTPResponse response = handler.handle(request);
 
     // Sending bytes from server to peer
-    if (send(peer_fd, response, strlen(response), 0) == -1)
+    std::string respStr = response.response();
+    if (send(peer_fd, respStr.c_str(), respStr.size(), 0) == -1)
       handle_error("sending bytes");
+    stop();
   }
 }
 

@@ -5,11 +5,11 @@
 
 HTTPRequest ::HTTPRequest(const char *buf) { parse(buf); }
 
-std::string HTTPRequest::getMethod() { return method; }
+std::string HTTPRequest::getMethod() const { return method; }
 
-std::string HTTPRequest::getPath() { return path; }
+std::string HTTPRequest::getPath() const { return path; }
 
-std::string HTTPRequest::getVersion() { return version; }
+std::string HTTPRequest::getVersion() const { return version; }
 
 void HTTPRequest::parse(const char *buf) {
   std::istringstream stream(buf);

@@ -9,9 +9,9 @@ private:
 
 public:
   HTTPRequest(const char *buf);
-  std::string getMethod();
-  std::string getPath();
-  std::string getVersion();
+  std::string getMethod() const;
+  std::string getPath() const;
+  std::string getVersion() const;
 
 private:
   void parse(const char *buf);

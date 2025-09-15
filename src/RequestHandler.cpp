@@ -13,9 +13,19 @@ HTTPResponse RequestHandler ::handle(const HTTPRequest &request) {
 </body>
 </html>
   )";
+
+  HTTPResponse response;
+
   if (request.getMethod() == "GET" && request.getPath() == "/" &&
       request.getVersion() == "HTTP/1.1") {
-    request.setStatus(request.getVersion, 200, "OK", OK);
-    request.setHeader("Content-Type", "text/html");
-    return request.response;
+    response.setStatus(request.getVersion(), 200, "OK");
+    response.setHeader("Content-Type", "text/html");
+    response.setBody(OK);
+  } else {
+    response.setStatus(request.getVersion(), 404, "Not Found");
+    response.setHeader("Content-Type", "text/plain");
+    response.setBody("404 Not Found");
   }
+
+  return response;
+}
