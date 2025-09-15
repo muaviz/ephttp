@@ -21,10 +21,9 @@ int main(void) {
   memset(&peer_addr, 0, sizeof(peer_addr));
 
   // server address initialisations
-  server_addr.sin_family = AF_INET;   // for IPv4
-  server_addr.sin_port = htons(8080); // port number 8080
-  server_addr.sin_addr.s_addr =
-      htonl(INADDR_ANY); // for 0.0.0.0, which means “bind to all interfaces”
+  server_addr.sin_family = AF_INET;                // for IPv4
+  server_addr.sin_port = htons(8080);              // port number 8080
+  server_addr.sin_addr.s_addr = htonl(INADDR_ANY); // for 0.0.0.0
   srv_fd =
       socket(AF_INET, SOCK_STREAM, 0); // creating the server socket (TCP/IPv4)
 
@@ -57,6 +56,7 @@ int main(void) {
       break;
     }
     buf[read_bytes] = '\0';
+    std::cout << buf;
 
     // Sending bytes from server to peer
     char imsg[] = "Haha! You said ";
