@@ -22,6 +22,6 @@ public:
   HTTPServer(int port = 8080);
   ~HTTPServer();
   void start();
-  void read();
+  void serve();
   void stop();
 };

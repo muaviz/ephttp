@@ -2,10 +2,10 @@
 
 int main(void) {
   HTTPServer server;
+  server.start();
   while (true) {
-    server.start();
-    server.read();
-    server.stop();
+    server.serve();
   }
+  server.stop();
   return 0;
 }
