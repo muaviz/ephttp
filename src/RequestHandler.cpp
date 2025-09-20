@@ -20,10 +20,12 @@ HTTPResponse RequestHandler ::handle(const HTTPRequest &request) {
       request.getVersion() == "HTTP/1.1") {
     response.setStatus(request.getVersion(), 200, "OK");
     response.setHeader("Content-Type", "text/html");
+    response.setHeader("Connection", "close");
     response.setBody(OK);
   } else {
     response.setStatus(request.getVersion(), 404, "Not Found");
     response.setHeader("Content-Type", "text/plain");
+    response.setHeader("Connection", "close");
     response.setBody("404 Not Found");
   }
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <string>
 
 class HTTPRequest {
@@ -6,6 +7,7 @@ private:
   std::string method;
   std::string path;
   std::string version;
+  std::map<std::string, std::string> headers;
 
 public:
   HTTPRequest(const char *buf);

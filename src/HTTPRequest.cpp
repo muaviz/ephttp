@@ -15,6 +15,20 @@ void HTTPRequest::parse(const char *buf) {
   std::istringstream stream(buf);
   std::string firstLine;
   std::getline(stream, firstLine);
+
+  std::string nxt;
+  while (std::getline(stream, nxt)) {
+    if (nxt.empty()) {
+      std::istringstream nxtstream(nxt);
+      std::string key, value;
+
+      if (std::getline(nxtstream, key, ':') && std::getline(nxtstream, value)) {
+        value.erase(0, value.find_first_not_of(" "));
+        headers[key] = value;
+      }
+    }
+  }
+
   std::istringstream iss(firstLine);
   iss >> method >> path >> version;
   if (!version.empty() && version.back() == '\r') {

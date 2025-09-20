@@ -43,7 +43,7 @@ void HTTPServer ::serve() {
   char buf[1024];
   long read_bytes = recv(peer_fd, buf, sizeof(buf), 0);
   if (read_bytes == -1)
-    handle_error("receiving bytes");
+    close(peer_fd);
   if (read_bytes == 0) {
     std::cout << "Client Disconnected\n";
   }
@@ -55,8 +55,7 @@ void HTTPServer ::serve() {
 
   // Sending bytes from server to peer
   std::string respStr = response.response();
-  if (send(peer_fd, respStr.c_str(), respStr.size(), 0) == -1)
-    handle_error("sending bytes");
+  send(peer_fd, respStr.c_str(), respStr.size(), 0);
   close(peer_fd);
 }
 
