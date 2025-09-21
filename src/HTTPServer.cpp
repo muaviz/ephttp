@@ -1,3 +1,19 @@
+/* ============================================================================
+ * HTTPServer.cpp
+ *
+ * Implements the HTTPServer class, which manages the core server-side logic
+ * for handling HTTP over TCP. Its responsibilities include:
+ *   - Creating and binding a TCP socket to a given port
+ *   - Listening for incoming client connections
+ *   - Accepting connections and reading raw HTTP requests
+ *   - Passing requests to the RequestHandler to generate responses
+ *   - Sending responses back to clients
+ *
+ * This class abstracts away the low-level socket operations and provides a
+ * simple interface for starting, serving, and stopping the HTTP server.
+ * ============================================================================
+ */
+
 #include "HTTPServer.h"
 #include "HTTPRequest.h"
 #include "HTTPResponse.h"
@@ -11,6 +27,7 @@
 #include <sys/socket.h> // socket, bind, listen, accept
 #include <unistd.h>     // close
 
+// Constructor: initializes server socket, binds to the given port
 HTTPServer ::HTTPServer(int port) : port(port) {
   peer_fd = -1;
   memset(&server_addr, 0, sizeof(server_addr));
@@ -28,18 +45,20 @@ HTTPServer ::HTTPServer(int port) : port(port) {
     handle_error("bind");
 }
 
+// Start listening for incoming client connections
 void HTTPServer ::start() {
   if (listen(server_fd, 1) == -1)
     handle_error("listen");
 }
 
+// Accepts a client connection, reads request, delegates to handler, and replies
 void HTTPServer ::serve() {
   peer_addr_size = sizeof(peer_addr);
   peer_fd = accept(server_fd, (struct sockaddr *)&peer_addr, &peer_addr_size);
   if (peer_fd == -1)
     handle_error("accept");
 
-  // Reading bytes from peer into buffer
+  // Read raw HTTP request from client
   char buf[1024];
   long read_bytes = recv(peer_fd, buf, sizeof(buf), 0);
   if (read_bytes == -1)
@@ -49,20 +68,24 @@ void HTTPServer ::serve() {
   }
   buf[read_bytes] = '\0';
 
+  // Parse request and generate response
   HTTPRequest request(buf);
   RequestHandler handler;
   HTTPResponse response = handler.handle(request);
 
-  // Sending bytes from server to peer
+  // Send response back to client
   std::string respStr = response.response();
   send(peer_fd, respStr.c_str(), respStr.size(), 0);
+
+  // Close the client connection
   close(peer_fd);
 }
 
+// Stop the server by closing the server socket
 void HTTPServer::stop() {
-  // Closing server and peer sockets
   if (close(server_fd) == -1)
     handle_error("close server");
 }
 
+// Destructor: ensures the server is stopped properly
 HTTPServer ::~HTTPServer() { stop(); }
